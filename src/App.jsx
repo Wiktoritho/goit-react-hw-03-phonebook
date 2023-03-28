@@ -3,13 +3,29 @@ import { Component } from 'react';
 import { Filter } from 'components/Filter';
 import { ContactsList } from 'components/ContactList';
 import { ContactsListElement } from 'components/ContactListElement';
-import css from "./App.module.css";
+import css from './App.module.css';
 
 export class App extends Component {
   state = {
     contacts: [],
     filter: '',
   };
+
+  componentDidMount() {
+    const savedContacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(savedContacts);
+    if (parsedContacts) {
+      this.setState({
+        contacts: parsedContacts,
+      });
+    }
+  }
+
+  componentDidUpdate(prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   addContact = contact => {
     this.setState({
